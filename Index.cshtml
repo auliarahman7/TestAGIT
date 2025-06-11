@@ -1,0 +1,153 @@
+@model ProduksiMobil
+
+@{
+    ViewBag.Title = "Penentuan Jumlah Produksi Mobil";
+    Layout = null;
+}
+
+
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f7f9fc;
+        margin: 0;
+        padding: 40px;
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 30px;
+    }
+
+    form {
+        max-width: 800px;
+        margin: 0 auto;
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        text-align: center;
+        padding: 12px;
+        border: 1px solid #e0e0e0;
+    }
+
+    th {
+        background-color: #f0f4f8;
+        font-weight: 600;
+        color: #555;
+    }
+
+    td input[type="number"] {
+        width: 60px;
+        padding: 6px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    button {
+        background-color: #2f80ed;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-right: 10px;
+    }
+
+    button:hover {
+        background-color: #1c64d1;
+    }
+
+    button:disabled {
+        background-color: #b3c1d1;
+        cursor: not-allowed;
+    }
+</style> 
+
+<h2>Penentuan Jumlah Produksi Mobil Dalam Seminggu</h2>
+
+<form method="post" action="/Produksi/Simpan">
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Senin</th>
+                <th>Selasa</th>
+                <th>Rabu</th>
+                <th>Kamis</th>
+                <th>Jumat</th>
+                <th>Sabtu</th>
+                <th>Minggu</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="number" id="senin" name="Senin" value="@Model.Senin" min="4" max="5" /></td>
+                <td><input type="number" id="selasa" name="Selasa" value="@Model.Selasa" min="4" max="5" /></td>
+                <td><input type="number" id="rabu" name="Rabu" value="@Model.Rabu"  min="4" max="5"   /></td>
+                <td><input type="number" id="kamis" name="Kamis" value="@Model.Kamis"  min="4" max="5"  /></td>
+                <td><input type="number" id="jumat" name="Jumat" value="@Model.Jumat" min="4" max="5"  /></td>
+                <td><input type="number" id="sabtu" name="Sabtu" value="@Model.Sabtu" min="4" max="5"  /></td>
+                <td><input type="number" id="minggu" name="Minggu" value="0" readonly /></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br />
+    <button type="button" onclick="tentukan()">Tentukan</button>
+    <button type="submit">Simpan</button>
+</form>
+
+<script>
+    function tentukan() {
+        const senin = parseInt(document.getElementById("senin").value);
+        const selasa = parseInt(document.getElementById("selasa").value);
+        const rabu = parseInt(document.getElementById("rabu").value);
+        const kamis = parseInt(document.getElementById("kamis").value);
+        const jumat = parseInt(document.getElementById("jumat").value);
+        const sabtu = parseInt(document.getElementById("sabtu").value);
+
+
+        if (isNaN(senin) && isNaN(selasa)  && isNaN(rabu) && isNaN(kamis) && isNaN(jumat) && isNaN(sabtu) )
+       {
+            alert("kolom harus diisi salah satu dengan angka minimal 4.");
+            return;
+        }
+
+        let total = senin + selasa + rabu + kamis  + jumat  + sabtu;
+        const hari = ["senin", "selasa",  "rabu", "kamis", "jumat", "sabtu"];
+        let values = [];
+
+        for (let i = 0; i < hari.length; i++) {
+            let rand = Math.random() < 0.5 ? 4 : 5;
+            if (total + rand > 27) rand = 4;
+            total += rand;
+            values.push(rand);
+        }
+
+        const minggu = 27 - total;
+        if (minggu < 0) {
+            alert("Total melebihi 27. Ulangi input!");
+            return;
+        }
+
+        for (let i = 0; i < hari.length; i++) {
+            document.getElementById(hari[i]).value = values[i];
+        }
+        document.getElementById("minggu").value = minggu;
+    }
+</script>
+ 
